@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
 import axios from "axios";
 
 export interface IPaste {
@@ -9,7 +9,7 @@ export interface IPaste {
 
 const URL = "https://pastebin-server.onrender.com";
 
-export default function DisplayPasteBin(): JSX.Element {
+export default function DisplayPasteBin():JSX.Element {
   const [pasteList, setPasteList] = useState<IPaste[]>([]);
   const [pasteSubmit, setPasteSubmit] = useState({
     name: "",
@@ -36,7 +36,7 @@ export default function DisplayPasteBin(): JSX.Element {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submitted", pasteSubmit);
+  //  console.log("submitted", pasteSubmit);
     postPasteToServer(pasteSubmit.name, pasteSubmit.text);
     getPastesFromServer();
   };
