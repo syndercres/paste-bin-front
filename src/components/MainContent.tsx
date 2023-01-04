@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "./MainContent.css";
 
 //--------------------------------------------------------------------------------
 //Defining types and URL for basic understanding when importing data/doing requests
@@ -29,6 +30,7 @@ export default function DisplayPasteBin(): JSX.Element {
 
   //--------------------------------------------------------------------------------Fetches all data from server
   const getPastesFromServer = async () => {
+    //   console.log("fetching list from api")
     try {
       const response = await axios.get(URL + "/pastes");
 
@@ -71,11 +73,8 @@ export default function DisplayPasteBin(): JSX.Element {
 
   const deleteAllPastes = async () => {
     try {
-      console.log("A curse on ye");
       await axios.delete(URL + "/delete");
-      getPastesFromServer();
     } catch (error) {
-      console.log("ye fool");
       console.error(error);
     }
   };
@@ -99,7 +98,7 @@ export default function DisplayPasteBin(): JSX.Element {
 
   return (
     <>
-      <div>
+      <div className="inputForm">
         {/*-------------------------------------------------------------------------------Describes behaviour of the form to enter data */}
         <form onSubmit={handleSubmit}>
           <input
@@ -128,14 +127,25 @@ export default function DisplayPasteBin(): JSX.Element {
         {pasteList.map((paste) => {
           return (
             <div key={paste.id}>
-              {paste.name} {paste.text}
+              <ul>
+                <li>
+                  {paste.name} {paste.text}
+                </li>
+              </ul>
             </div>
           );
         })}
       </div>
 
       {/*------------------------------------------------------------------------------Button to delete all entries */}
-      <button onClick={deleteAllPastes}>Please I don't want to die</button>
+      <button
+        onClick={() => {
+          deleteAllPastes();
+          getPastesFromServer();
+        }}
+      >
+        Delete all pastes
+      </button>
     </>
   );
 }
