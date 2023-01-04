@@ -105,6 +105,10 @@ export default function DisplayPasteBin():JSX.Element {
           );
         })}
       </div>
+
+
+{/*------------------------------------------------------------------------------Button to delete all entries */}
+
     </>
   );
 }
