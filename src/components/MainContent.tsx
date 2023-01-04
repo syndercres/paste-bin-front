@@ -70,15 +70,15 @@ export default function DisplayPasteBin(): JSX.Element {
   // }
 
   const deleteAllPastes = async () => {
-        try {
-          console.log('A curse on ye')
-          await axios.delete(URL + "/delete");
-        }
-        catch(error) {
-          console.log('ye fool');
-          console.error(error);
-        }
-  }
+    try {
+      console.log("A curse on ye");
+      await axios.delete(URL + "/delete");
+      getPastesFromServer();
+    } catch (error) {
+      console.log("ye fool");
+      console.error(error);
+    }
+  };
 
   //--------------------------------------------------------------------------------Actions to perform when form is submitted
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -135,8 +135,7 @@ export default function DisplayPasteBin(): JSX.Element {
       </div>
 
       {/*------------------------------------------------------------------------------Button to delete all entries */}
-        <button onClick={deleteAllPastes}>Please I don't want to die</button>
-    
+      <button onClick={deleteAllPastes}>Please I don't want to die</button>
     </>
   );
 }
