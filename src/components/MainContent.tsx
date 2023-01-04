@@ -37,7 +37,7 @@ export default function DisplayPasteBin(): JSX.Element {
       console.error("you have an error");
     }
   };
-  
+
   //--------------------------------------------------------------------------------Posts new data to server
   const postPasteToServer = async (newName: string, newText: string) => {
     try {
