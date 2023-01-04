@@ -1,10 +1,9 @@
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 //--------------------------------------------------------------------------------
 //Defining types and URL for basic understanding when importing data/doing requests
 //--------------------------------------------------------------------------------
-
 
 //--------------------------------------------------------------------------------Defining interface for pastes
 export interface IPaste {
@@ -20,16 +19,15 @@ const URL = "https://pastebin-server.onrender.com";
 //Start of our function, aims to have a user retrieve and add to a list of name, text pairs
 //--------------------------------------------------------------------------------
 
-export default function DisplayPasteBin():JSX.Element {
-
-//--------------------------------------------------------------------------------Defining useStates
+export default function DisplayPasteBin(): JSX.Element {
+  //--------------------------------------------------------------------------------Defining useStates
   const [pasteList, setPasteList] = useState<IPaste[]>([]);
   const [pasteSubmit, setPasteSubmit] = useState({
     name: "",
     text: "",
   });
 
-//--------------------------------------------------------------------------------Fetches all data from server
+  //--------------------------------------------------------------------------------Fetches all data from server
   const getPastesFromServer = async () => {
     try {
       const response = await axios.get(URL + "/pastes");
@@ -39,9 +37,8 @@ export default function DisplayPasteBin():JSX.Element {
       console.error("you have an error");
     }
   };
-
-
-//--------------------------------------------------------------------------------Posts new data to server
+  
+  //--------------------------------------------------------------------------------Posts new data to server
   const postPasteToServer = async (newName: string, newText: string) => {
     try {
       await axios.post(URL + "/paste", { name: newName, text: newText });
@@ -50,28 +47,27 @@ export default function DisplayPasteBin():JSX.Element {
     }
   };
 
-//--------------------------------------------------------------------------------Actions to perform when form is submitted
+  //--------------------------------------------------------------------------------Actions to perform when form is submitted
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  //  console.log("submitted", pasteSubmit);
+    //  console.log("submitted", pasteSubmit);
     postPasteToServer(pasteSubmit.name, pasteSubmit.text);
     getPastesFromServer();
   };
 
-
-//--------------------------------------------------------------------------------UseEffect loading data on first render (empty dependency)
+  //--------------------------------------------------------------------------------UseEffect loading data on first render (empty dependency)
   useEffect(() => {
     getPastesFromServer();
   }, []);
 
-//--------------------------------------------------------------------------------
-//Return statement - Gives form and and list of data from server to HTML
-//--------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------
+  //Return statement - Gives form and and list of data from server to HTML
+  //--------------------------------------------------------------------------------
 
   return (
     <>
       <div>
-{/*-------------------------------------------------------------------------------Describes behaviour of the form to enter data */}
+        {/*-------------------------------------------------------------------------------Describes behaviour of the form to enter data */}
         <form onSubmit={handleSubmit}>
           <input
             placeholder="your name"
@@ -94,8 +90,7 @@ export default function DisplayPasteBin():JSX.Element {
         </form>
       </div>
 
-
-{/*-------------------------------------------------------------------------------Maps over the retrieved list of all pastes from updated table */}
+      {/*-------------------------------------------------------------------------------Maps over the retrieved list of all pastes from updated table */}
       <div>
         {pasteList.map((paste) => {
           return (
@@ -106,9 +101,7 @@ export default function DisplayPasteBin():JSX.Element {
         })}
       </div>
 
-
-{/*------------------------------------------------------------------------------Button to delete all entries */}
-
+      {/*------------------------------------------------------------------------------Button to delete all entries */}
     </>
   );
 }
