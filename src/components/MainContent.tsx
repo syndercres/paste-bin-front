@@ -47,6 +47,39 @@ export default function DisplayPasteBin(): JSX.Element {
     }
   };
 
+  //--------------------------------------------------------------------------------Deletes all data from server
+  // function deleteRow(id) {
+  //   // Send a DELETE request to the server
+  //   axios.delete(/delete/${id})
+  //     .then(res => {
+  //       console.log(res.data);
+  //     })
+  //     .catch(error => {
+  //       console.error(error);
+  //     });
+  // }
+  // function deleteRow() {
+  //   // Send a DELETE request to the server
+  //   axios.delete(/delete)
+  //     .then(res => {
+  //       console.log(res.data);
+  //     })
+  //     .catch(error => {
+  //       console.error(error);
+  //     });
+  // }
+
+  const deleteAllPastes = async () => {
+    try {
+      console.log("A curse on ye");
+      await axios.delete(URL + "/delete");
+      getPastesFromServer();
+    } catch (error) {
+      console.log("ye fool");
+      console.error(error);
+    }
+  };
+
   //--------------------------------------------------------------------------------Actions to perform when form is submitted
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -102,6 +135,7 @@ export default function DisplayPasteBin(): JSX.Element {
       </div>
 
       {/*------------------------------------------------------------------------------Button to delete all entries */}
+      <button onClick={deleteAllPastes}>Please I don't want to die</button>
     </>
   );
 }
