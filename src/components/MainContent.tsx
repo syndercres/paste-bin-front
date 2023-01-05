@@ -16,7 +16,7 @@ export interface IPaste {
 //--------------------------------------------------------------------------------Defining interface for comments
 export interface IComment {
   comment_id: number;
-  paste_id:number
+  paste_id: number;
   name: string;
   comment: string;
 }
@@ -127,7 +127,11 @@ export default function DisplayPasteBin(): JSX.Element {
   const handlePasteClick = (text: string, id: number) => {
     setFullText(text);
     setClickedButtonId(id);
-    setFilteredComments(commentList.filter((comment) => {return comment.paste_id===clickedButtonId}));
+    setFilteredComments(
+      commentList.filter((comment) => {
+        return comment.paste_id === clickedButtonId;
+      })
+    );
     console.log(clickedButtonId);
   };
   //--------------------------------------------------------------------------------
@@ -207,7 +211,6 @@ export default function DisplayPasteBin(): JSX.Element {
               );
             })}
           </div>
-
         </div>
       </div>
     </>
