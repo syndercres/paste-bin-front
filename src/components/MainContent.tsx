@@ -146,6 +146,7 @@ export default function DisplayPasteBin(): JSX.Element {
       commentSubmit.comment
     );
     getCommentsFromServer();
+    console.table(commentList);
   };
 
   //--------------------------------------------------------------------------------UseEffect loading data on first render (empty dependency)
@@ -178,6 +179,7 @@ export default function DisplayPasteBin(): JSX.Element {
         <div className="text-exclude">
           <div className="inputForm">
             {/*-------------------------------------------------------------------------------Describes behaviour of the form to enter data */}
+            <h2>Submit a Paste</h2>
             <form onSubmit={handleSubmit}>
               <input
                 placeholder="your name"
@@ -232,19 +234,9 @@ export default function DisplayPasteBin(): JSX.Element {
           <h2>Full Paste:</h2>
           <p>{fullText}</p>
           <br />
+          <h2>Comments:</h2>
 
-          <div className="comments-container">
-            {filteredComments.map((comment) => {
-              return (
-                <div className="list-item" key={comment.comment_id}>
-                  <button>
-                    {comment.name}: {comment.comment}
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-          <div className="inputForm">
+          <div className="commentForm">
             {/*-------------------------------------------------------------------------------Describes behaviour of the form to enter comment */}
             <form onSubmit={handleCommentSubmit}>
               <input
@@ -257,7 +249,7 @@ export default function DisplayPasteBin(): JSX.Element {
               />
 
               <input
-                placeholder="paste here"
+                placeholder="comment here"
                 type="text"
                 value={commentSubmit.comment}
                 onChange={(e) =>
@@ -269,6 +261,17 @@ export default function DisplayPasteBin(): JSX.Element {
               />
               <input type="submit" />
             </form>
+          </div>
+          <div className="comments-container">
+            {filteredComments.map((comment) => {
+              return (
+                <div className="list-item" key={comment.comment_id}>
+                  <p>
+                    {comment.name}: {comment.comment}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
