@@ -121,10 +121,12 @@ export default function DisplayPasteBin(): JSX.Element {
   //--------------------------------------------------------------------------------Deletes all data from server
 
   const deleteAllPastes = async () => {
-    try {
-      await axios.delete(URL + "/delete");
-    } catch (error) {
-      console.error(error);
+    if (window.confirm("You sure? No going back...") === true) {
+      try {
+        await axios.delete(URL + "/delete");
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
