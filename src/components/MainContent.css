@@ -17,7 +17,7 @@ button {
   outline: none;
   overflow: visible;
   padding: 13px 16px;
-  text-align: center;
+  text-align: left;
   text-transform: uppercase;
   touch-action: manipulation;
   transform: translateZ(0);
@@ -59,6 +59,7 @@ button:disabled {
 }
 h1 {
   font-size: 70px;
+  text-align: center;
   font-weight: 600;
   background-image: linear-gradient(to left, #553c9a, #b393d3);
   color: transparent;
@@ -66,7 +67,7 @@ h1 {
   -webkit-background-clip: text;
 }
 
-form {
+.inputForm {
   appearance: button;
   background-color: #1899d6;
   border: solid transparent;
@@ -103,9 +104,12 @@ input {
 .list-item {
   margin-bottom: 10px;
   margin-top: 10px;
+  border-radius: 15px;
 }
 .delete {
   background-color: #d64e18;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 .great-container {
@@ -136,7 +140,6 @@ input {
   outline: none;
   overflow: visible;
   padding: 13px 16px;
-  text-align: center;
   text-transform: uppercase;
   touch-action: manipulation;
   transform: translateZ(0);
@@ -146,4 +149,21 @@ input {
   vertical-align: middle;
   white-space: nowrap;
   width: 830px;
+  text-align: center;
+}
+
+p {
+  background-color: #83c6e6;
+  border-radius: 15px;
+  text-align: left;
+  padding-left: 10px;
+}
+
+h2 {
+  background-color: #1c5b79;
+  padding: 10px;
+  border-radius: 15px;
+}
+.list-item {
+  text-align: left;
 }
