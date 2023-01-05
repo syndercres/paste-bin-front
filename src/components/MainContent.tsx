@@ -12,6 +12,19 @@ export interface IPaste {
   name: string;
   text: string;
 }
+//--------------------------------------------------------------------------------Function that limits text length
+
+function limitText(text: string): string {
+  let newText = "";
+
+  if (text.length > 60) {
+    newText = text.substring(0, 59);
+  } else {
+    newText = text;
+  }
+
+  return newText;
+}
 
 //--------------------------------------------------------------------------------Settting URL for render.com back-end
 const URL = "https://pastebin-server.onrender.com";
@@ -27,6 +40,7 @@ export default function DisplayPasteBin(): JSX.Element {
     name: "",
     text: "",
   });
+  const [fullText, setFullText] = useState<string>("");
 
   //--------------------------------------------------------------------------------Fetches all data from server
   const getPastesFromServer = async () => {
@@ -42,34 +56,18 @@ export default function DisplayPasteBin(): JSX.Element {
 
   //--------------------------------------------------------------------------------Posts new data to server
   const postPasteToServer = async (newName: string, newText: string) => {
-    try {
-      await axios.post(URL + "/paste", { name: newName, text: newText });
-    } catch (error) {
-      console.log("error from post");
+    if (newText.length > 0) {
+      try {
+        await axios.post(URL + "/paste", { name: newName, text: newText });
+      } catch (error) {
+        console.log("error from post");
+      }
+    } else {
+      alert("you must paste something before you submit!");
     }
   };
 
   //--------------------------------------------------------------------------------Deletes all data from server
-  // function deleteRow(id) {
-  //   // Send a DELETE request to the server
-  //   axios.delete(/delete/${id})
-  //     .then(res => {
-  //       console.log(res.data);
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //     });
-  // }
-  // function deleteRow() {
-  //   // Send a DELETE request to the server
-  //   axios.delete(/delete)
-  //     .then(res => {
-  //       console.log(res.data);
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //     });
-  // }
 
   const deleteAllPastes = async () => {
     try {
@@ -92,60 +90,77 @@ export default function DisplayPasteBin(): JSX.Element {
     getPastesFromServer();
   }, []);
 
+  //--------------------------------------------------------------------------------handler function for clicking on a summarised paste
+
+  const handlePasteClick = (text: string) => {
+    setFullText(text);
+  };
   //--------------------------------------------------------------------------------
   //Return statement - Gives form and and list of data from server to HTML
   //--------------------------------------------------------------------------------
 
   return (
     <>
-      <div className="inputForm">
-        {/*-------------------------------------------------------------------------------Describes behaviour of the form to enter data */}
-        <form onSubmit={handleSubmit}>
-          <input
-            placeholder="your name"
-            type="text"
-            value={pasteSubmit.name}
-            onChange={(e) =>
-              setPasteSubmit({ ...pasteSubmit, name: e.target.value })
-            }
-          />
+      <h1>Josiah and Sinbad's Pastebin</h1>
+      <div className="great-container">
+        <div className="text-exclude">
+          <div className="inputForm">
+            {/*-------------------------------------------------------------------------------Describes behaviour of the form to enter data */}
+            <form onSubmit={handleSubmit}>
+              <input
+                placeholder="your name"
+                type="text"
+                value={pasteSubmit.name}
+                onChange={(e) =>
+                  setPasteSubmit({ ...pasteSubmit, name: e.target.value })
+                }
+              />
 
-          <input
-            placeholder="paste here"
-            type="text"
-            value={pasteSubmit.text}
-            onChange={(e) =>
-              setPasteSubmit({ ...pasteSubmit, text: e.target.value })
-            }
-          />
-          <input type="submit" />
-        </form>
+              <input
+                placeholder="paste here"
+                type="text"
+                value={pasteSubmit.text}
+                onChange={(e) =>
+                  setPasteSubmit({ ...pasteSubmit, text: e.target.value })
+                }
+              />
+              <input type="submit" />
+            </form>
+          </div>
+
+          {/*-------------------------------------------------------------------------------Maps over the retrieved list of all pastes from updated table */}
+          <div className="list-container">
+            {pasteList.map((paste) => {
+              return (
+                <div className="list-item" key={paste.id}>
+                  <button
+                    onClick={() => {
+                      handlePasteClick(paste.text);
+                    }}
+                  >
+                    {paste.name}: {limitText(paste.text)}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          {/*------------------------------------------------------------------------------Button to delete all entries */}
+          <button
+            className="delete"
+            onClick={() => {
+              deleteAllPastes();
+              getPastesFromServer();
+            }}
+          >
+            Delete all pastes
+          </button>
+        </div>
+        <div className="text-box">
+          <h2>Full Paste:</h2>
+          <p>{fullText}</p>
+        </div>
       </div>
-
-      {/*-------------------------------------------------------------------------------Maps over the retrieved list of all pastes from updated table */}
-      <div>
-        {pasteList.map((paste) => {
-          return (
-            <div key={paste.id}>
-              <ul>
-                <li>
-                  {paste.name} {paste.text}
-                </li>
-              </ul>
-            </div>
-          );
-        })}
-      </div>
-
-      {/*------------------------------------------------------------------------------Button to delete all entries */}
-      <button
-        onClick={() => {
-          deleteAllPastes();
-          getPastesFromServer();
-        }}
-      >
-        Delete all pastes
-      </button>
     </>
   );
 }
