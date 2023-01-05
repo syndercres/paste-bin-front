@@ -76,6 +76,7 @@ export default function DisplayPasteBin(): JSX.Element {
   const getCommentsFromServer = async () => {
     //   console.log("fetching list from api")
     try {
+      console.log("got comments", commentList)
       const response = await axios.get(URL + "/comments");
 
       setCommentList(response.data.rows);
@@ -137,7 +138,8 @@ export default function DisplayPasteBin(): JSX.Element {
   };
 
   //--------------------------------------------------------------------------------Actions to perform when comment form is submitted
-  const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
     e.preventDefault();
     //  console.log("submitted", pasteSubmit);
     postCommentToServer(
@@ -146,6 +148,11 @@ export default function DisplayPasteBin(): JSX.Element {
       commentSubmit.comment
     );
     getCommentsFromServer();
+    setFilteredComments(
+      commentList.filter((comment) => {
+        return comment.paste_id === clickedButtonId;
+      })
+    );
     console.table(commentList);
   };
 
@@ -157,16 +164,17 @@ export default function DisplayPasteBin(): JSX.Element {
 
   //--------------------------------------------------------------------------------handler function for clicking on a summarised paste
 
-  const handlePasteClick = (text: string, id: number) => {
+  const handlePasteClick = async (text: string, id: number) => {
     setClickedButtonId(id);
     setFullText(text);
+    getCommentsFromServer()
     setFilteredComments(
       commentList.filter((comment) => {
-        return comment.paste_id === id;
+        return comment.paste_id === clickedButtonId;
       })
     );
-    console.log(clickedButtonId);
-    console.table(filteredComments);
+    // console.log(clickedButtonId);
+    // console.table(filteredComments);
   };
   //--------------------------------------------------------------------------------
   //Return statement - Gives form and and list of data from server to HTML
@@ -182,6 +190,7 @@ export default function DisplayPasteBin(): JSX.Element {
             <h2>Submit a Paste</h2>
             <form onSubmit={handleSubmit}>
               <input
+                className="file"
                 placeholder="your name"
                 type="text"
                 value={pasteSubmit.name}
@@ -190,15 +199,15 @@ export default function DisplayPasteBin(): JSX.Element {
                 }
               />
 
-              <input
+              <textarea
+                className="file"
                 placeholder="paste here"
-                type="text"
                 value={pasteSubmit.text}
                 onChange={(e) =>
                   setPasteSubmit({ ...pasteSubmit, text: e.target.value })
                 }
               />
-              <input type="submit" />
+              <input className="file" type="submit" />
             </form>
           </div>
 
@@ -259,7 +268,7 @@ export default function DisplayPasteBin(): JSX.Element {
                   })
                 }
               />
-              <input type="submit" />
+              <input type="submit"  />
             </form>
           </div>
           <div className="comments-container">

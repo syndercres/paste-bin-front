@@ -69,7 +69,7 @@ h1 {
 
 .inputForm {
   appearance: button;
-  background-color: #1899d6;
+  background-color: #32be5c;
   border: solid transparent;
   border-radius: 16px;
   border-width: 0 0 4px;
@@ -153,10 +153,11 @@ input {
 }
 
 p {
-  background-color: #83c6e6;
+  background-color: #5bbbe7;
   border-radius: 15px;
   text-align: left;
   padding-left: 10px;
+  white-space: break-spaces;
 }
 
 h2 {
@@ -166,4 +167,12 @@ h2 {
 }
 .list-item {
   text-align: left;
+}
+
+.file {
+  border-radius: 15px;
+  margin: 10px;
+  padding: 10px;
+  height: 30px;
+  align-items: flex-start;
 }
