@@ -54,13 +54,12 @@ export default function DisplayPasteBin(): JSX.Element {
 
   const [filteredComments, setFilteredComments] = useState<IComment[]>([]);
 
-  // const [commentSubmit, setCommentSubmit] = useState({
-  //   paste_id: 0,
-  //   name: "",
-  //   text: "",
-  // });
+  const [commentSubmit, setCommentSubmit] = useState({
+    name: "",
+    comment: "",
+  });
 
-  const [clickedButtonId, setClickedButtonId] = useState<number>();
+  const [clickedButtonId, setClickedButtonId] = useState<number>(0);
 
   //--------------------------------------------------------------------------------Fetches all data from server
   const getPastesFromServer = async () => {
@@ -98,6 +97,27 @@ export default function DisplayPasteBin(): JSX.Element {
     }
   };
 
+  //--------------------------------------------------------------------------------Posts new comment attached to paste to server
+  const postCommentToServer = async (
+    pasteId: number,
+    newName: string,
+    newComment: string
+  ) => {
+    if (newComment.length > 0) {
+      try {
+        await axios.post(URL + "/comment", {
+          paste_id: pasteId,
+          name: newName,
+          comment: newComment,
+        });
+      } catch (error) {
+        console.log("error from post");
+      }
+    } else {
+      alert("you must paste something before you submit!");
+    }
+  };
+
   //--------------------------------------------------------------------------------Deletes all data from server
 
   const deleteAllPastes = async () => {
@@ -108,12 +128,24 @@ export default function DisplayPasteBin(): JSX.Element {
     }
   };
 
-  //--------------------------------------------------------------------------------Actions to perform when form is submitted
+  //--------------------------------------------------------------------------------Actions to perform when paste form is submitted
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //  console.log("submitted", pasteSubmit);
     postPasteToServer(pasteSubmit.name, pasteSubmit.text);
     getPastesFromServer();
+  };
+
+  //--------------------------------------------------------------------------------Actions to perform when comment form is submitted
+  const handleCommentSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    //  console.log("submitted", pasteSubmit);
+    postCommentToServer(
+      clickedButtonId,
+      commentSubmit.name,
+      commentSubmit.comment
+    );
+    getCommentsFromServer();
   };
 
   //--------------------------------------------------------------------------------UseEffect loading data on first render (empty dependency)
@@ -125,14 +157,15 @@ export default function DisplayPasteBin(): JSX.Element {
   //--------------------------------------------------------------------------------handler function for clicking on a summarised paste
 
   const handlePasteClick = (text: string, id: number) => {
-    setFullText(text);
     setClickedButtonId(id);
+    setFullText(text);
     setFilteredComments(
       commentList.filter((comment) => {
-        return comment.paste_id === clickedButtonId;
+        return comment.paste_id === id;
       })
     );
     console.log(clickedButtonId);
+    console.table(filteredComments);
   };
   //--------------------------------------------------------------------------------
   //Return statement - Gives form and and list of data from server to HTML
@@ -210,6 +243,32 @@ export default function DisplayPasteBin(): JSX.Element {
                 </div>
               );
             })}
+          </div>
+          <div className="inputForm">
+            {/*-------------------------------------------------------------------------------Describes behaviour of the form to enter comment */}
+            <form onSubmit={handleCommentSubmit}>
+              <input
+                placeholder="your name"
+                type="text"
+                value={commentSubmit.name}
+                onChange={(e) =>
+                  setCommentSubmit({ ...commentSubmit, name: e.target.value })
+                }
+              />
+
+              <input
+                placeholder="paste here"
+                type="text"
+                value={commentSubmit.comment}
+                onChange={(e) =>
+                  setCommentSubmit({
+                    ...commentSubmit,
+                    comment: e.target.value,
+                  })
+                }
+              />
+              <input type="submit" />
+            </form>
           </div>
         </div>
       </div>
