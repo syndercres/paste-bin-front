@@ -58,10 +58,13 @@ export default function DisplayPasteBin(): JSX.Element {
 
   //--------------------------------------------------------------------------------Posts new data to server
   const postPasteToServer = async (newName: string, newText: string) => {
+    if(newText.length>0){
     try {
       await axios.post(URL + "/paste", { name: newName, text: newText });
     } catch (error) {
       console.log("error from post");
+    }}else{
+      alert("you must paste something before you submit!")
     }
   };
 
@@ -127,10 +130,10 @@ export default function DisplayPasteBin(): JSX.Element {
       </div>
 
       {/*-------------------------------------------------------------------------------Maps over the retrieved list of all pastes from updated table */}
-      <div>
+      <div className="list-container">
         {pasteList.map((paste) => {
           return (
-            <div key={paste.id}>
+            <div className="list-item" key={paste.id}>
 
                  <button onClick={() => {handlePasteClick(paste.text)}}>{paste.name}:  {limitText(paste.text)}</button> 
 
@@ -140,7 +143,7 @@ export default function DisplayPasteBin(): JSX.Element {
       </div>
 
       {/*------------------------------------------------------------------------------Button to delete all entries */}
-      <button
+      <button className="delete"
         onClick={() => {
           deleteAllPastes();
           getPastesFromServer();
