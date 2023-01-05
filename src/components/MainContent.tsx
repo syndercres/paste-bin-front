@@ -17,8 +17,8 @@ export interface IPaste {
 function limitText(text:string):string{
   let newText = "";
   
-  if(text.length>200){
-    newText = text.substring(0,199);
+  if(text.length>60){
+    newText = text.substring(0,59);
   }else {
     newText = text;
   }
@@ -42,6 +42,7 @@ export default function DisplayPasteBin(): JSX.Element {
     name: "",
     text: "",
   });
+  const [fullText,setFullText] = useState<string>("");
 
   //--------------------------------------------------------------------------------Fetches all data from server
   const getPastesFromServer = async () => {
@@ -88,6 +89,12 @@ export default function DisplayPasteBin(): JSX.Element {
     getPastesFromServer();
   }, []);
 
+  //--------------------------------------------------------------------------------handler function for clicking on a summarised paste
+
+  const handlePasteClick = (text: string) => {
+    setFullText(text);
+  
+  }
   //--------------------------------------------------------------------------------
   //Return statement - Gives form and and list of data from server to HTML
   //--------------------------------------------------------------------------------
@@ -124,11 +131,9 @@ export default function DisplayPasteBin(): JSX.Element {
         {pasteList.map((paste) => {
           return (
             <div key={paste.id}>
-              <ul>
-                <li>
-                  {paste.name} {limitText(paste.text)}
-                </li>
-              </ul>
+
+                 <button onClick={() => {handlePasteClick(paste.text)}}>{paste.name}:  {limitText(paste.text)}</button> 
+
             </div>
           );
         })}
@@ -143,6 +148,9 @@ export default function DisplayPasteBin(): JSX.Element {
       >
         Delete all pastes
       </button>
+      <div>
+        <p>{fullText}</p>
+      </div>
     </>
   );
 }
