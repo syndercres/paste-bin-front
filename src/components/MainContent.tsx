@@ -12,6 +12,14 @@ export interface IPaste {
   name: string;
   text: string;
 }
+
+//--------------------------------------------------------------------------------Defining interface for comments
+export interface IComment {
+  comment_id: number;
+  paste_id:number
+  name: string;
+  comment: string;
+}
 //--------------------------------------------------------------------------------Function that limits text length
 
 function limitText(text: string): string {
@@ -42,6 +50,13 @@ export default function DisplayPasteBin(): JSX.Element {
   });
   const [fullText, setFullText] = useState<string>("");
 
+  const [commentList, setCommentList] = useState<IComment[]>([]);
+  const [commentSubmit, setCommentSubmit] = useState({
+    paste_id: 0,
+    name: "",
+    text: "",
+  });
+
   //--------------------------------------------------------------------------------Fetches all data from server
   const getPastesFromServer = async () => {
     //   console.log("fetching list from api")
@@ -50,11 +65,22 @@ export default function DisplayPasteBin(): JSX.Element {
 
       setPasteList(response.data.rows);
     } catch (error) {
-      console.error("you have an error");
+      console.error("you have an error with pastes");
     }
   };
 
-  //--------------------------------------------------------------------------------Posts new data to server
+  const getCommentsFromServer = async () => {
+    //   console.log("fetching list from api")
+    try {
+      const response = await axios.get(URL + "/comments");
+
+      setCommentList(response.data.rows);
+    } catch (error) {
+      console.error("you have an error with comments");
+    }
+  };
+
+  //--------------------------------------------------------------------------------Posts new paste to server
   const postPasteToServer = async (newName: string, newText: string) => {
     if (newText.length > 0) {
       try {
@@ -88,6 +114,7 @@ export default function DisplayPasteBin(): JSX.Element {
   //--------------------------------------------------------------------------------UseEffect loading data on first render (empty dependency)
   useEffect(() => {
     getPastesFromServer();
+    getCommentsFromServer();
   }, []);
 
   //--------------------------------------------------------------------------------handler function for clicking on a summarised paste
@@ -159,6 +186,20 @@ export default function DisplayPasteBin(): JSX.Element {
         <div className="text-box">
           <h2>Full Paste:</h2>
           <p>{fullText}</p>
+          <br />
+
+          <div className="comments-container">
+            {commentList.map((comment) => {
+              return (
+                <div className="list-item" key={comment.comment_id}>
+                  <button>
+                    {comment.name}: {comment.comment}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
         </div>
       </div>
     </>
