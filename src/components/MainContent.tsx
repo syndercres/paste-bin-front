@@ -51,11 +51,16 @@ export default function DisplayPasteBin(): JSX.Element {
   const [fullText, setFullText] = useState<string>("");
 
   const [commentList, setCommentList] = useState<IComment[]>([]);
-  const [commentSubmit, setCommentSubmit] = useState({
-    paste_id: 0,
-    name: "",
-    text: "",
-  });
+
+  const [filteredComments, setFilteredComments] = useState<IComment[]>([]);
+
+  // const [commentSubmit, setCommentSubmit] = useState({
+  //   paste_id: 0,
+  //   name: "",
+  //   text: "",
+  // });
+
+  const [clickedButtonId, setClickedButtonId] = useState<number>();
 
   //--------------------------------------------------------------------------------Fetches all data from server
   const getPastesFromServer = async () => {
@@ -119,8 +124,11 @@ export default function DisplayPasteBin(): JSX.Element {
 
   //--------------------------------------------------------------------------------handler function for clicking on a summarised paste
 
-  const handlePasteClick = (text: string) => {
+  const handlePasteClick = (text: string, id: number) => {
     setFullText(text);
+    setClickedButtonId(id);
+    setFilteredComments(commentList.filter((comment) => {return comment.paste_id===clickedButtonId}));
+    console.log(clickedButtonId);
   };
   //--------------------------------------------------------------------------------
   //Return statement - Gives form and and list of data from server to HTML
@@ -162,7 +170,7 @@ export default function DisplayPasteBin(): JSX.Element {
                 <div className="list-item" key={paste.id}>
                   <button
                     onClick={() => {
-                      handlePasteClick(paste.text);
+                      handlePasteClick(paste.text, paste.id);
                     }}
                   >
                     {paste.name}: {limitText(paste.text)}
@@ -189,7 +197,7 @@ export default function DisplayPasteBin(): JSX.Element {
           <br />
 
           <div className="comments-container">
-            {commentList.map((comment) => {
+            {filteredComments.map((comment) => {
               return (
                 <div className="list-item" key={comment.comment_id}>
                   <button>
