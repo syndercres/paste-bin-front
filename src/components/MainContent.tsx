@@ -12,6 +12,21 @@ export interface IPaste {
   name: string;
   text: string;
 }
+//--------------------------------------------------------------------------------Function that limits text length
+
+function limitText(text:string):string{
+  let newText = "";
+  
+  if(text.length>200){
+    newText = text.substring(0,199);
+  }else {
+    newText = text;
+  }
+  
+  
+  return newText
+}
+
 
 //--------------------------------------------------------------------------------Settting URL for render.com back-end
 const URL = "https://pastebin-server.onrender.com";
@@ -50,26 +65,7 @@ export default function DisplayPasteBin(): JSX.Element {
   };
 
   //--------------------------------------------------------------------------------Deletes all data from server
-  // function deleteRow(id) {
-  //   // Send a DELETE request to the server
-  //   axios.delete(/delete/${id})
-  //     .then(res => {
-  //       console.log(res.data);
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //     });
-  // }
-  // function deleteRow() {
-  //   // Send a DELETE request to the server
-  //   axios.delete(/delete)
-  //     .then(res => {
-  //       console.log(res.data);
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //     });
-  // }
+
 
   const deleteAllPastes = async () => {
     try {
@@ -98,6 +94,7 @@ export default function DisplayPasteBin(): JSX.Element {
 
   return (
     <>
+    <h1>Josiah and Sinbad's Pastebin</h1>
       <div className="inputForm">
         {/*-------------------------------------------------------------------------------Describes behaviour of the form to enter data */}
         <form onSubmit={handleSubmit}>
@@ -129,7 +126,7 @@ export default function DisplayPasteBin(): JSX.Element {
             <div key={paste.id}>
               <ul>
                 <li>
-                  {paste.name} {paste.text}
+                  {paste.name} {limitText(paste.text)}
                 </li>
               </ul>
             </div>
