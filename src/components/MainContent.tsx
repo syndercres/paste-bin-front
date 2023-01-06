@@ -76,7 +76,7 @@ export default function DisplayPasteBin(): JSX.Element {
   const getCommentsFromServer = async () => {
     //   console.log("fetching list from api")
     try {
-      console.log("got comments", commentList)
+      console.log("got comments", commentList);
       const response = await axios.get(URL + "/comments");
 
       setCommentList(response.data.rows);
@@ -139,7 +139,6 @@ export default function DisplayPasteBin(): JSX.Element {
 
   //--------------------------------------------------------------------------------Actions to perform when comment form is submitted
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-
     e.preventDefault();
     //  console.log("submitted", pasteSubmit);
     postCommentToServer(
@@ -159,7 +158,6 @@ export default function DisplayPasteBin(): JSX.Element {
   //--------------------------------------------------------------------------------UseEffect loading data on first render (empty dependency)
   useEffect(() => {
     getPastesFromServer();
-    getCommentsFromServer();
   }, []);
 
   //--------------------------------------------------------------------------------handler function for clicking on a summarised paste
@@ -167,7 +165,7 @@ export default function DisplayPasteBin(): JSX.Element {
   const handlePasteClick = async (text: string, id: number) => {
     setClickedButtonId(id);
     setFullText(text);
-    getCommentsFromServer()
+    getCommentsFromServer();
     setFilteredComments(
       commentList.filter((comment) => {
         return comment.paste_id === clickedButtonId;
@@ -268,7 +266,7 @@ export default function DisplayPasteBin(): JSX.Element {
                   })
                 }
               />
-              <input type="submit"  />
+              <input type="submit" />
             </form>
           </div>
           <div className="comments-container">
