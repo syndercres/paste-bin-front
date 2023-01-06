@@ -148,18 +148,12 @@ export default function DisplayPasteBin(): JSX.Element {
       commentSubmit.name,
       commentSubmit.comment
     );
-  
-    while (commentLength === commentList.length){
-      delay(2000)
-      .then(getCommentsFromServer)
-  }
-
+    getCommentsFromServer()
   }
 
   //--------------------------------------------------------------------------------UseEffect loading data on first render (empty dependency)
   useEffect(() => {
     getPastesFromServer();
-    getCommentsFromServer();
   }, []);
 
   useEffect(()=>{
@@ -168,6 +162,7 @@ export default function DisplayPasteBin(): JSX.Element {
         return comment.paste_id === clickedButtonId;
       })
     );
+    getCommentsFromServer();
   },[clickedButtonId,commentList])
 
   //--------------------------------------------------------------------------------handler function for clicking on a summarised paste
