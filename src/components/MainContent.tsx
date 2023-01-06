@@ -59,7 +59,7 @@ export default function DisplayPasteBin(): JSX.Element {
     comment: "",
   });
 
-  const [clickedButtonId, setClickedButtonId] = useState<number>(0);
+  const [clickedButtonId, setClickedButtonId] = useState<number|null>(null);
 
   //--------------------------------------------------------------------------------Fetches all data from server
   const getPastesFromServer = async () => {
@@ -143,6 +143,7 @@ export default function DisplayPasteBin(): JSX.Element {
     e.preventDefault();
     //  console.log("submitted", pasteSubmit);
 
+    if (clickedButtonId===null){console.log("no id"); return} //makes no changes if null
     postCommentToServer(
       clickedButtonId,
       commentSubmit.name,
@@ -239,11 +240,15 @@ export default function DisplayPasteBin(): JSX.Element {
         </div>
         <div className="text-box">
           <h2>Full Paste:</h2>
+
+          {clickedButtonId!==null ?
           <p>{fullText}</p>
+          : "Click to view full paste text."}
           <br />
           <h2>Comments:</h2>
 
-          <div className="commentForm">
+          {clickedButtonId!==null ?
+          <div className="commentForm"> 
             {/*-------------------------------------------------------------------------------Describes behaviour of the form to enter comment */}
             <form onSubmit={handleCommentSubmit}>
               <input
@@ -269,6 +274,8 @@ export default function DisplayPasteBin(): JSX.Element {
               <input type="submit" />
             </form>
           </div>
+          : "Click to view comments."}
+
           <div className="comments-container">
             {filteredComments.map((comment) => {
               return (
