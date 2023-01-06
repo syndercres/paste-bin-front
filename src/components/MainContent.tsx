@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./MainContent.css";
+import { delay } from "q";
 
 //--------------------------------------------------------------------------------
 //Defining types and URL for basic understanding when importing data/doing requests
@@ -76,13 +77,12 @@ export default function DisplayPasteBin(): JSX.Element {
   const getCommentsFromServer = async () => {
     //   console.log("fetching list from api")
     try {
-      console.log("got comments", commentList);
       const response = await axios.get(URL + "/comments");
-
-      setCommentList(response.data.rows);
+       setCommentList(response.data.rows);
     } catch (error) {
       console.error("you have an error with comments");
     }
+
   };
 
   //--------------------------------------------------------------------------------Posts new paste to server
@@ -130,7 +130,7 @@ export default function DisplayPasteBin(): JSX.Element {
   };
 
   //--------------------------------------------------------------------------------Actions to perform when paste form is submitted
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //  console.log("submitted", pasteSubmit);
     postPasteToServer(pasteSubmit.name, pasteSubmit.text);
@@ -138,27 +138,37 @@ export default function DisplayPasteBin(): JSX.Element {
   };
 
   //--------------------------------------------------------------------------------Actions to perform when comment form is submitted
-  const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+  const handleCommentSubmit =  async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //  console.log("submitted", pasteSubmit);
+    const commentLength = commentList.length
     postCommentToServer(
       clickedButtonId,
       commentSubmit.name,
       commentSubmit.comment
     );
+  
+    while (commentLength === commentList.length){
+      delay(2000)
+      .then(getCommentsFromServer)
+  }
+
+  }
+
+  //--------------------------------------------------------------------------------UseEffect loading data on first render (empty dependency)
+  useEffect(() => {
+    getPastesFromServer();
     getCommentsFromServer();
+  }, []);
+
+  useEffect(()=>{
     setFilteredComments(
       commentList.filter((comment) => {
         return comment.paste_id === clickedButtonId;
       })
     );
-    console.table(commentList);
-  };
-
-  //--------------------------------------------------------------------------------UseEffect loading data on first render (empty dependency)
-  useEffect(() => {
-    getPastesFromServer();
-  }, []);
+  },[clickedButtonId,commentList])
 
   //--------------------------------------------------------------------------------handler function for clicking on a summarised paste
 
@@ -166,11 +176,6 @@ export default function DisplayPasteBin(): JSX.Element {
     setClickedButtonId(id);
     setFullText(text);
     getCommentsFromServer();
-    setFilteredComments(
-      commentList.filter((comment) => {
-        return comment.paste_id === clickedButtonId;
-      })
-    );
     // console.log(clickedButtonId);
     // console.table(filteredComments);
   };
