@@ -129,10 +129,13 @@ export default function DisplayPasteBin(): JSX.Element {
 
   //--------------------------------------------------------------------------------Actions to perform when paste form is submitted
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    //  console.log("submitted", pasteSubmit);
-    postPasteToServer(pasteSubmit.name, pasteSubmit.text);
-    getPastesFromServer();
+    if (window.confirm("You sure? No going back...") === true) {
+      try {
+        await axios.delete(URL + "/delete");
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   //--------------------------------------------------------------------------------Actions to perform when comment form is submitted
