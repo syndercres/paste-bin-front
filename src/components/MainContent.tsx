@@ -76,9 +76,7 @@ export default function DisplayPasteBin(): JSX.Element {
   const getCommentsFromServer = async () => {
     //   console.log("fetching list from api")
     try {
-      console.log("got comments", commentList);
       const response = await axios.get(URL + "/comments");
-
       setCommentList(response.data.rows);
     } catch (error) {
       console.error("you have an error with comments");
@@ -132,7 +130,7 @@ export default function DisplayPasteBin(): JSX.Element {
   };
 
   //--------------------------------------------------------------------------------Actions to perform when paste form is submitted
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //  console.log("submitted", pasteSubmit);
     postPasteToServer(pasteSubmit.name, pasteSubmit.text);
@@ -140,21 +138,17 @@ export default function DisplayPasteBin(): JSX.Element {
   };
 
   //--------------------------------------------------------------------------------Actions to perform when comment form is submitted
+
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //  console.log("submitted", pasteSubmit);
+
     postCommentToServer(
       clickedButtonId,
       commentSubmit.name,
       commentSubmit.comment
     );
     getCommentsFromServer();
-    setFilteredComments(
-      commentList.filter((comment) => {
-        return comment.paste_id === clickedButtonId;
-      })
-    );
-    console.table(commentList);
   };
 
   //--------------------------------------------------------------------------------UseEffect loading data on first render (empty dependency)
@@ -162,17 +156,21 @@ export default function DisplayPasteBin(): JSX.Element {
     getPastesFromServer();
   }, []);
 
+  useEffect(() => {
+    setFilteredComments(
+      commentList.filter((comment) => {
+        return comment.paste_id === clickedButtonId;
+      })
+    );
+    getCommentsFromServer();
+  }, [clickedButtonId, commentList]);
+
   //--------------------------------------------------------------------------------handler function for clicking on a summarised paste
 
   const handlePasteClick = async (text: string, id: number) => {
     setClickedButtonId(id);
     setFullText(text);
     getCommentsFromServer();
-    setFilteredComments(
-      commentList.filter((comment) => {
-        return comment.paste_id === clickedButtonId;
-      })
-    );
     // console.log(clickedButtonId);
     // console.table(filteredComments);
   };
