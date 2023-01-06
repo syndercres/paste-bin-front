@@ -120,15 +120,6 @@ export default function DisplayPasteBin(): JSX.Element {
   //--------------------------------------------------------------------------------Deletes all data from server
 
   const deleteAllPastes = async () => {
-    try {
-      await axios.delete(URL + "/delete");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  //--------------------------------------------------------------------------------Actions to perform when paste form is submitted
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     if (window.confirm("You sure? No going back...") === true) {
       try {
         await axios.delete(URL + "/delete");
@@ -136,6 +127,14 @@ export default function DisplayPasteBin(): JSX.Element {
         console.error(error);
       }
     }
+  };
+
+  //--------------------------------------------------------------------------------Actions to perform when paste form is submitted
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    //  console.log("submitted", pasteSubmit);
+    postPasteToServer(pasteSubmit.name, pasteSubmit.text);
+    getPastesFromServer();
   };
 
   //--------------------------------------------------------------------------------Actions to perform when comment form is submitted
