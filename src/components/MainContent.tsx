@@ -154,7 +154,7 @@ export default function DisplayPasteBin(): JSX.Element {
   //--------------------------------------------------------------------------------UseEffect loading data on first render (empty dependency)
   useEffect(() => {
     getPastesFromServer();
-  }, []);
+  }, [pasteList]);
 
   useEffect(() => {
     setFilteredComments(
